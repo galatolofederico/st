@@ -154,6 +154,7 @@ static unsigned int defaultattr = 11;
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
+const unsigned int mousescrollincrement = 1;
 static MouseShortcut mshortcuts[] = {
 	/* button               mask            string */
 	{ Button4,              XK_NO_MOD,      "\031" },
@@ -162,8 +163,8 @@ static MouseShortcut mshortcuts[] = {
 
 MouseKey mkeys[] = {
 	/* button               mask            function        argument */
-	{ Button4,              ShiftMask,      kscrollup,      {.i =  1} },
-	{ Button5,              ShiftMask,      kscrolldown,    {.i =  1} },
+	{ Button4,              ShiftMask,      kscrollup,      {.i =  mousescrollincrement} },
+	{ Button5,              ShiftMask,      kscrolldown,    {.i =  mousescrollincrement} },
 };
 
 /* Internal keyboard shortcuts. */
