@@ -19,6 +19,7 @@ static char *argv0;
 #include "arg.h"
 #include "st.h"
 #include "win.h"
+#include "ph.h"
 
 /* types used in config.h */
 typedef struct {
@@ -1780,6 +1781,13 @@ run(void)
 	int ttyfd;
 	struct timespec drawtimeout, *tv = NULL, now, last, lastblink;
 	long deltatime;
+	PatternHook *p;
+
+	for (p = phs; p < phs + phs_len; p++){
+		p->match = 0;
+		p->running = 0;
+		p->buff = 0;
+	}
 
 	/* Waiting for window mapping */
 	do {

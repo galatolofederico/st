@@ -19,6 +19,8 @@
 
 #include "st.h"
 #include "win.h"
+#include "ph.h"
+
 
 #if   defined(__linux)
  #include <pty.h>
@@ -238,6 +240,8 @@ static uchar utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
 static uchar utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
 static Rune utfmin[UTF_SIZ + 1] = {       0,    0,  0x80,  0x800,  0x10000};
 static Rune utfmax[UTF_SIZ + 1] = {0x10FFFF, 0x7F, 0x7FF, 0xFFFF, 0x10FFFF};
+
+#include "ph.c"
 
 ssize_t
 xwrite(int fd, const char *s, size_t len)
@@ -2557,6 +2561,7 @@ twrite(const char *buf, int buflen, int show_ctrl)
 	int charsize;
 	Rune u;
 	int n;
+	PatternHook *p;
 
 	for (n = 0; n < buflen; n += charsize) {
 		if (IS_SET(MODE_UTF8) && !IS_SET(MODE_SIXEL)) {
@@ -2579,6 +2584,14 @@ twrite(const char *buf, int buflen, int show_ctrl)
 			}
 		}
 		tputc(u);
+		for (p = phs; p < phs + phs_len; p++){
+			if(buf[n] == p->pattern[p->match]) p->match++;
+			else p->match = 0;
+			if(p->running)
+				p->running = p->hook(buf[n], p);
+			if(p->match == strlen(p->pattern))
+				p->running = p->hook(buf[n], p);
+		}
 	}
 	return n;
 }
