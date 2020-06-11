@@ -1,4 +1,4 @@
-int test_hook(char ch, void* p){
+int red_hook(char ch, void* p){
     static char* red = "\033[31m";
     static char* reset = "\033[0m";
     if (((PatternHook*)(p))->running == 0){
@@ -14,7 +14,9 @@ int test_hook(char ch, void* p){
     }
 }
 
+
 PatternHook phs[] = {
-    {"<RED>", test_hook},
+    {"<RED>",   red_hook},
 };
+
 int phs_len = LEN(phs);

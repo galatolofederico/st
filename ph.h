@@ -7,4 +7,4 @@ typedef struct {
 } PatternHook;
 
 extern PatternHook phs[];
-int phs_len;
+extern int phs_len;
